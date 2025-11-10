@@ -1,73 +1,225 @@
-# Welcome to your Lovable project
+# Employee Scheduler
 
-## Project info
+A comprehensive employee scheduling and payroll management system with time tracking capabilities. Built with React, TypeScript, and Lovable Cloud (Supabase backend).
 
-**URL**: https://lovable.dev/projects/f2eeb162-422d-4a57-86dc-e0cb2b6dccb4
+## Features
 
-## How can I edit this code?
+### 👥 Employee Management
+- Add, edit, and delete employees
+- Track employee details (name, email)
+- Set individual hourly rates and overtime rates
+- Unique email validation
 
-There are several ways of editing your application.
+### ⏰ Time Tracking
+- Clock in/out functionality for employees
+- Optional shift notes
+- View recent time entries per employee
+- Calculate work duration automatically
+- Prevent duplicate clock-ins
 
-**Use Lovable**
+### 💰 Payroll Management
+- Automatic calculation of regular and overtime hours
+- Overtime tracking (hours over 40/week)
+- Monthly payroll summaries
+- Individual employee payroll breakdowns
+- Real-time rate calculations
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f2eeb162-422d-4a57-86dc-e0cb2b6dccb4) and start prompting.
+### 🖥️ Infrastructure Integration
+- **Load Balancer IP**: `10.48.229.48` (Production)
+- **Cluster IP**: `10.48.229.139` (Development)
+- **NFS Storage**: `10.48.228.25:/srv/nfs/shawac3`
+- **Container Image**: `cithit/shawac3:latest`
 
-Changes made via Lovable will be committed automatically to this repo.
+## Technology Stack
 
-**Use your preferred IDE**
+- **Frontend**: React 18, TypeScript, Tailwind CSS
+- **UI Components**: shadcn/ui
+- **Backend**: Lovable Cloud (Supabase)
+- **Database**: PostgreSQL with Row Level Security
+- **State Management**: TanStack Query (React Query)
+- **Forms**: React Hook Form
+- **Build Tool**: Vite
+- **Deployment**: Kubernetes with NFS persistence
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Getting Started
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prerequisites
+- Node.js 18+ and npm
+- Access to Lovable Cloud
 
-Follow these steps:
+### Installation
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+# Navigate to project directory
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The app will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Database Setup
 
-**Use GitHub Codespaces**
+The database is automatically configured through Lovable Cloud with the following tables:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- **employees**: Store employee information and pay rates
+- **time_entries**: Track clock-in/out times and work sessions
 
-## What technologies are used for this project?
+Row Level Security (RLS) is enabled on all tables for data protection.
 
-This project is built with:
+## Usage
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Adding Employees
 
-## How can I deploy this project?
+1. Navigate to the **Employees** tab
+2. Click **Add Employee**
+3. Fill in:
+   - Full Name
+   - Email Address
+   - Hourly Rate ($/hour)
+   - Overtime Rate ($/hour for hours over 40/week)
+4. Click **Add Employee** to save
 
-Simply open [Lovable](https://lovable.dev/projects/f2eeb162-422d-4a57-86dc-e0cb2b6dccb4) and click on Share -> Publish.
+### Tracking Time
 
-## Can I connect a custom domain to my Lovable project?
+1. Go to the **Time Tracking** tab
+2. Select an employee from the dropdown
+3. Add optional notes about the shift
+4. Click **Clock In** to start tracking
+5. Click **Clock Out** when the shift ends
 
-Yes, you can!
+### Viewing Payroll
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+1. Navigate to the **Payroll** tab
+2. View summary cards showing:
+   - Total payroll for current month
+   - Total hours worked
+   - Overtime hours
+   - Employee count
+3. Scroll down for individual employee payroll breakdowns
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Infrastructure Details
+
+See [INFRASTRUCTURE.md](./INFRASTRUCTURE.md) for complete infrastructure configuration including:
+- Network topology
+- Database schema
+- Deployment configurations
+- Security policies
+
+## Testing
+
+See [TESTING.md](./TESTING.md) for comprehensive testing criteria including:
+- Functional tests for all features
+- Performance benchmarks
+- Data integrity validation
+- Integration testing workflows
+- Security test cases
+
+### Quick Test Checklist
+
+- [ ] Add employee with valid data
+- [ ] Edit employee information
+- [ ] Delete employee
+- [ ] Clock in for employee
+- [ ] Clock out for employee
+- [ ] View time entry history
+- [ ] Check payroll calculations
+- [ ] Verify overtime calculation (>40 hours)
+- [ ] Test with multiple employees
+- [ ] Validate infrastructure IPs display correctly
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── employees/       # Employee management components
+│   │   ├── EmployeeList.tsx
+│   │   ├── EmployeeCard.tsx
+│   │   └── EmployeeForm.tsx
+│   ├── time/           # Time tracking components
+│   │   ├── TimeTracking.tsx
+│   │   └── TimeEntryList.tsx
+│   ├── payroll/        # Payroll components
+│   │   └── PayrollSummary.tsx
+│   └── ui/             # shadcn UI components
+├── pages/
+│   ├── Index.tsx       # Main application page
+│   └── NotFound.tsx    # 404 page
+├── integrations/
+│   └── supabase/       # Auto-generated Supabase client
+└── hooks/              # Custom React hooks
+```
+
+## Deployment
+
+### Development Environment
+Accessible via Cluster IP: `10.48.229.139`
+
+### Production Environment
+Accessible via Load Balancer IP: `10.48.229.48`
+
+### Kubernetes Deployment
+Uses the deployment configurations from the reference repository:
+- `deployment-dev.yaml` for development
+- `deployment-prod.yaml` for production
+
+Both deployments use NFS for data persistence ensuring data survives pod restarts.
+
+## API Documentation
+
+### Employees Table
+```typescript
+interface Employee {
+  id: string;           // UUID
+  name: string;         // Full name
+  email: string;        // Unique email
+  hourly_rate: number;  // Regular hourly rate
+  overtime_rate: number; // Overtime hourly rate
+  created_at: string;   // ISO timestamp
+  updated_at: string;   // ISO timestamp
+}
+```
+
+### Time Entries Table
+```typescript
+interface TimeEntry {
+  id: string;          // UUID
+  employee_id: string; // Foreign key to employees
+  clock_in: string;    // ISO timestamp
+  clock_out: string | null; // ISO timestamp or null
+  notes: string | null; // Optional shift notes
+  created_at: string;  // ISO timestamp
+  updated_at: string;  // ISO timestamp
+}
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests (see TESTING.md)
+5. Submit a pull request
+
+## Support
+
+For issues or questions:
+- Check [TESTING.md](./TESTING.md) for troubleshooting
+- Review [INFRASTRUCTURE.md](./INFRASTRUCTURE.md) for configuration details
+- Open an issue in the repository
+
+## License
+
+This project is built with Lovable and follows standard open-source practices.
+
+## Acknowledgments
+
+Based on infrastructure from the CIT 225 Lab 4-2 project at Miami University, extended with modern web technologies and comprehensive employee scheduling features.
