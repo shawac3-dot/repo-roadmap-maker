@@ -1,13 +1,12 @@
-FROM node:20-alpine
+FROM node:20-slim
 
 WORKDIR /test
 
 # Install testing dependencies
 RUN npm install -g playwright@1.47.0
 
-# Install playwright browsers
-RUN npx playwright install chromium
-RUN npx playwright install-deps chromium
+# Install playwright browsers and dependencies
+RUN npx playwright install --with-deps chromium
 
 # Copy test files
 COPY package*.json ./
