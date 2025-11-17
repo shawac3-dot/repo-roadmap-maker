@@ -2,11 +2,11 @@ pipeline {
     agent any
     
     environment {
+        DOCKER_CREDENTIALS_ID = 'roseaw-dockerhub'
         DOCKER_IMAGE = 'cithit/shawac3'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
-        DOCKER_CREDENTIALS_ID = 'roseaw-dockerhub'
         GITHUB_URL = 'https://github.com/shawac3-dot/repo-roadmap-maker.git'
-        KUBECONFIG_CREDENTIALS_ID = 'kubeconfig'
+        KUBECONFIG_CREDENTIALS_ID = 'shawac3-225'
     }
     
     stages {
