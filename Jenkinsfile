@@ -5,13 +5,16 @@ pipeline {
         DOCKER_IMAGE = 'cithit/shawac3'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
         DOCKER_CREDENTIALS_ID = 'roseaw-dockerhub'
+        GITHUB_URL = 'https://github.com/shawac3-dot/repo-roadmap-maker.git'
         KUBECONFIG_CREDENTIALS_ID = 'kubeconfig'
     }
     
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                cleanWs()
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']],
+                          userRemoteConfigs: [[url: "${GITHUB_URL}"]]])
             }
         }
         
