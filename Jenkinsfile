@@ -29,7 +29,7 @@ pipeline {
           steps {
             script {
               docker.withRegistry('https://registry.hub.docker.com', "${DOCKER_CREDENTIALS_ID}") {
-                def app = docker("${DOCKER_IMAGE}:${IMAGE_TAG}", "-f Dockerfile .")
+                def app = docker.build("${DOCKER_IMAGE}:${IMAGE_TAG}", "-f Dockerfile .")
                 app.push()
               }
             }
