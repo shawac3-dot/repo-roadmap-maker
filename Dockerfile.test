@@ -1,12 +1,6 @@
-FROM node:20-slim
+FROM mcr.microsoft.com/playwright:v1.47.0-jammy
 
 WORKDIR /test
-
-# Install testing dependencies
-RUN npm install -g playwright@1.47.0
-
-# Install playwright browsers and dependencies
-RUN npx playwright install --with-deps chromium
 
 # Copy test files
 COPY package*.json ./
