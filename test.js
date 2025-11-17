@@ -1,0 +1,37 @@
+const { chromium } = require("playwright");
+
+(async () => {
+  console.log("Starting acceptance tests...");
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  
+  const baseUrl = process.env.TEST_URL || "http://employee-scheduler-dev-service";
+  
+  try {
+    console.log(`Testing ${baseUrl}...`);
+    await page.goto(baseUrl, { waitUntil: "networkidle", timeout: 10000 });
+    
+    // Basic smoke tests
+    const title = await page.title();
+    console.log("Page title:", title);
+    
+    // Check if main elements are present
+    const hasContent = await page.locator("body").count() > 0;
+    if (!hasContent) throw new Error("Page body not found");
+    
+    console.log("✓ Basic page load test passed");
+    
+    // Check if it is a React app
+    const hasReactRoot = await page.locator("#root").count() > 0;
+    if (hasReactRoot) {
+      console.log("✓ React root element found");
+    }
+    
+    console.log("All acceptance tests passed!");
+  } catch (error) {
+    console.error("Test failed:", error.message);
+    process.exit(1);
+  } finally {
+    await browser.close();
+  }
+})();
