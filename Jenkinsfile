@@ -65,39 +65,30 @@ pipeline {
         stage('Reset DB After Security Checks') {
           steps {
             script {
-              // grab a running app pod
-              def appPod = sh(
-                script: "kubectl get pods -l app=flask -o jsonpath='{.items[0].metadata.name}'",
-                returnStdout: true
-              ).trim()
-        
+              echo "Clearing test data from Supabase..."
               sh """
-                kubectl exec ${appPod} -- python3 - <<'PY'
-                import sqlite3
-                conn = sqlite3.connect('/nfs/demo.db')
-                cur = conn.cursor()
-                cur.execute('DELETE FROM contacts')
-                conn.commit()
-                conn.close()
-                PY
-                """
-
+                curl -X POST \
+                  -H "Content-Type: application/json" \
+                  -d '{"action":"clear"}' \
+                  https://yhmyhktdgzcanhgznqgy.supabase.co/functions/v1/test-data-manager
+              """
             }
           }
-        } 
+        }
    
         stage('Generate Test Data') {
             steps {
                 script {
-                // Ensure the label accurately targets the correct pods.
-                def appPod = sh(script: "kubectl get pods -l app=flask -o jsonpath='{.items[0].metadata.name}'", returnStdout: true).trim()
-                // Execute command within the pod. 
-                sh "sleep 15"
-                sh "kubectl get pods"
-                sh "kubectl exec ${appPod} -- python3 data-gen.py"
+                    echo "Generating test data in Supabase..."
+                    sh """
+                      curl -X POST \
+                        -H "Content-Type: application/json" \
+                        -d '{"action":"generate"}' \
+                        https://yhmyhktdgzcanhgznqgy.supabase.co/functions/v1/test-data-manager
+                    """
                 }
             }
-    }
+        }
 
         stage("Run Acceptance Tests") {
             steps {
@@ -105,7 +96,7 @@ pipeline {
                     sh 'docker stop qa-tests || true'
                     sh 'docker rm qa-tests || true'
                     sh 'docker build -t qa-tests -f Dockerfile.test .'
-                    sh 'docker run qa-tests'
+                    sh 'docker run -e TEST_URL=http://employee-scheduler-dev-service qa-tests'
                 }
             }
         }
@@ -113,9 +104,13 @@ pipeline {
         stage('Remove Test Data') {
             steps {
                 script {
-                    // Run the python script to generate data to add to the database
-                    def appPod = sh(script: "kubectl get pods -l app=flask -o jsonpath='{.items[0].metadata.name}'", returnStdout: true).trim()
-                    sh "kubectl exec ${appPod} -- python3 data-clear.py"
+                    echo "Removing test data from Supabase..."
+                    sh """
+                      curl -X POST \
+                        -H "Content-Type: application/json" \
+                        -d '{"action":"clear"}' \
+                        https://yhmyhktdgzcanhgznqgy.supabase.co/functions/v1/test-data-manager
+                    """
                 }
             }
         }

@@ -1,1 +1,4 @@
 project_id = "yhmyhktdgzcanhgznqgy"
+
+[functions.test-data-manager]
+verify_jwt = false
