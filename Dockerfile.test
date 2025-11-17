@@ -3,8 +3,8 @@ FROM mcr.microsoft.com/playwright:v1.47.0-jammy
 WORKDIR /test
 
 # Copy test files
-COPY package*.json ./
-RUN npm install --only=dev
+COPY test-package.json ./package.json
+RUN npm install
 
 COPY test.js ./
 
