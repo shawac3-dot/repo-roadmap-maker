@@ -11,9 +11,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main',
-                    credentialsId: 'github-pat-credentials',
-                    url: 'https://github.com/shawac3-dot/repo-roadmap-maker.git'
+                checkout scm
             }
         }
         
