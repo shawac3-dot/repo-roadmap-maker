@@ -72,7 +72,6 @@ metadata:
   name: employee-scheduler-dev-service
 spec:
   type: ClusterIP
-  clusterIP: 10.48.229.139
   selector:
     app: employee-scheduler
     environment: development
