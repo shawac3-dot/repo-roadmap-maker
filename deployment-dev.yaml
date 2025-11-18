@@ -25,21 +25,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: employee-scheduler-dev
+  name: employee-scheduler
   labels:
     app: employee-scheduler
-    environment: development
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: employee-scheduler
-      environment: development
   template:
     metadata:
       labels:
         app: employee-scheduler
-        environment: development
     spec:
       imagePullSecrets:
         - name: roseaw-dockerhub
@@ -51,9 +48,6 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /usr/share/nginx/html/data
-        env:
-        - name: NODE_ENV
-          value: "development"
         resources:
           requests:
             memory: "256Mi"
@@ -74,7 +68,6 @@ spec:
   type: LoadBalancer
   selector:
     app: employee-scheduler
-    environment: development
   ports:
     - protocol: TCP
       port: 80
