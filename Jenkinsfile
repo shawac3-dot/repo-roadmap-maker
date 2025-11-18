@@ -6,7 +6,8 @@ pipeline {
         DOCKER_IMAGE = 'cithit/shawac3'                                   //<-----change this to your MiamiID!
         IMAGE_TAG = "build-${BUILD_NUMBER}"
         GITHUB_URL = 'https://github.com/shawac3-dot/repo-roadmap-maker.git'     //<-----change this to match this new repository!
-        KUBECONFIG = credentials('shawac3-225')                           //<-----change this to match your kubernetes credentials (MiamiID-225)! 
+        KUBECONFIG = credentials('shawac3-225')                           //<-----change this to match your kubernetes credentials (MiamiID-225)!
+        DEV_SERVICE_IP = 'http://10.48.229.139'
     }
 
     stages {
@@ -96,7 +97,7 @@ pipeline {
                     sh 'docker stop qa-tests || true'
                     sh 'docker rm qa-tests || true'
                     sh 'docker build -t qa-tests -f Dockerfile.test .'
-                    sh 'docker run -e TEST_URL=http://employee-scheduler-dev-service qa-tests'
+                    sh "docker run -e TEST_URL=${DEV_SERVICE_IP} qa-tests"
                 }
             }
         }
