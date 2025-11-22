@@ -25,21 +25,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: employee-scheduler-prod
+  name: employee-scheduler
   labels:
     app: employee-scheduler
-    environment: production
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: employee-scheduler
-      environment: production
   template:
     metadata:
       labels:
         app: employee-scheduler
-        environment: production
     spec:
       imagePullSecrets:
         - name: roseaw-dockerhub
@@ -51,28 +48,13 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /usr/share/nginx/html/data
-        env:
-        - name: NODE_ENV
-          value: "production"
         resources:
           requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
             memory: "512Mi"
             cpu: "500m"
-          limits:
-            memory: "1Gi"
-            cpu: "1000m"
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 5
       volumes:
       - name: data
         persistentVolumeClaim:
@@ -85,10 +67,9 @@ metadata:
 spec:
   type: LoadBalancer
   loadBalancerIP: 10.48.229.48
-  selector:
-    app: employee-scheduler
-    environment: production
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
+  selector:
+    app: employee-scheduler
