@@ -40,9 +40,9 @@ pipeline {
         stage('Deploy to Dev Environment') {
             steps {
                 script {
-                    sh "kubectl --kubeconfig=${KUBECONFIG} delete --all deployments --namespace=default"
+                    sh 'kubectl --kubeconfig=$KUBECONFIG delete --all deployments --namespace=default'
                     sh "sed -i 's|${DOCKER_IMAGE}:latest|${DOCKER_IMAGE}:${IMAGE_TAG}|' deployment-dev.yaml"
-                    sh "kubectl --kubeconfig=${KUBECONFIG} apply -f deployment-dev.yaml"
+                    sh 'kubectl --kubeconfig=$KUBECONFIG apply -f deployment-dev.yaml'
                 }
             }
         }
@@ -116,14 +116,14 @@ pipeline {
             steps {
                 script {
                     sh "sed -i 's|${DOCKER_IMAGE}:latest|${DOCKER_IMAGE}:${IMAGE_TAG}|' deployment-prod.yaml"
-                    sh "kubectl --kubeconfig=${KUBECONFIG} apply -f deployment-prod.yaml"
+                    sh 'kubectl --kubeconfig=$KUBECONFIG apply -f deployment-prod.yaml'
                 }
             }
         }
         stage('Check Kubernetes Cluster') {
             steps {
                 script {
-                    sh "kubectl --kubeconfig=${KUBECONFIG} get all"
+                    sh 'kubectl --kubeconfig=$KUBECONFIG get all'
                 }
             }
         }
