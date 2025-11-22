@@ -40,9 +40,12 @@ pipeline {
         stage('Deploy to Dev Environment') {
             steps {
                 script {
-                    sh 'kubectl --kubeconfig=$KUBECONFIG delete --all deployments --namespace=default'
+                    // This sets up the Kubernetes configuration using the specified KUBECONFIG
+                    def kubeConfig = readFile(KUBECONFIG)
+                    sh "kubectl delete --all deployments --namespace=default"
+                    // This updates the deployment-dev.yaml to use the new image tag
                     sh "sed -i 's|${DOCKER_IMAGE}:latest|${DOCKER_IMAGE}:${IMAGE_TAG}|' deployment-dev.yaml"
-                    sh 'kubectl --kubeconfig=$KUBECONFIG apply -f deployment-dev.yaml'
+                    sh "kubectl apply -f deployment-dev.yaml"
                 }
             }
         }
@@ -115,15 +118,18 @@ pipeline {
           stage('Deploy to Prod Environment') {
             steps {
                 script {
+                    // Set up Kubernetes configuration using the specified KUBECONFIG
+                    //sh "ls -la"
                     sh "sed -i 's|${DOCKER_IMAGE}:latest|${DOCKER_IMAGE}:${IMAGE_TAG}|' deployment-prod.yaml"
-                    sh 'kubectl --kubeconfig=$KUBECONFIG apply -f deployment-prod.yaml'
+                    sh "cd .."
+                    sh "kubectl apply -f deployment-prod.yaml"
                 }
             }
-        }
+        }     
         stage('Check Kubernetes Cluster') {
             steps {
                 script {
-                    sh 'kubectl --kubeconfig=$KUBECONFIG get all'
+                    sh "kubectl get all"
                 }
             }
         }
